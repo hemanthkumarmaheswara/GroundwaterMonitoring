@@ -132,7 +132,7 @@ export default function Home() {
         </motion.section>
 
       {/* Content */}
-      <div className="max-w-6xl mx-auto px-4 py-6 space-y-5">
+      <div className="max-w-6xl mx-auto px-4 py-3 space-y-4">
         {/* Features */}
         <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }} variants={stagger}>
           <motion.h2 variants={fadeUp} custom={0} className="text-lg font-display font-bold text-foreground mb-4">Platform Capabilities</motion.h2>
