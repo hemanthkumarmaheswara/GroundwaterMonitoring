@@ -131,87 +131,66 @@ export default function Home() {
           </motion.div>
         </motion.section>
 
-      {/* Features - Full page */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-40px" }}
-        variants={stagger}
-        className="min-h-screen flex flex-col items-center justify-center px-4 py-16 bg-background"
-      >
-        <div className="max-w-6xl w-full">
-          <motion.h2 variants={fadeUp} custom={0} className="text-2xl lg:text-3xl font-display font-bold text-foreground mb-8 text-center">Platform Capabilities</motion.h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Content */}
+      <div className="max-w-6xl mx-auto px-4 py-6 space-y-5">
+        {/* Features */}
+        <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }} variants={stagger}>
+          <motion.h2 variants={fadeUp} custom={0} className="text-lg font-display font-bold text-foreground mb-4">Platform Capabilities</motion.h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {features.map((f, i) => (
-              <motion.div key={f.title} variants={fadeUp} custom={i + 1} className="p-5 rounded-xl bg-card border border-border hover:shadow-md transition-shadow">
-                <div className="p-2.5 rounded-lg bg-primary/10 w-fit">
-                  <f.icon className="h-5 w-5 text-primary" />
+              <motion.div key={f.title} variants={fadeUp} custom={i + 1} className="p-4 rounded-xl bg-card border border-border hover:shadow-md transition-shadow">
+                <div className="p-2 rounded-lg bg-primary/10 w-fit">
+                  <f.icon className="h-4 w-4 text-primary" />
                 </div>
-                <h3 className="font-display font-semibold text-foreground mt-3">{f.title}</h3>
-                <p className="text-sm text-muted-foreground mt-1.5">{f.description}</p>
+                <h3 className="font-display font-semibold text-foreground text-sm mt-2.5">{f.title}</h3>
+                <p className="text-xs text-muted-foreground mt-1">{f.description}</p>
               </motion.div>
             ))}
           </div>
-        </div>
-      </motion.section>
+        </motion.section>
 
-      {/* How It Works - Full page */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-40px" }}
-        variants={stagger}
-        className="min-h-screen flex flex-col items-center justify-center px-4 py-16 bg-gradient-to-br from-primary/5 via-background to-accent/5"
-      >
-        <div className="max-w-6xl w-full">
-          <motion.h2 variants={fadeUp} custom={0} className="text-2xl lg:text-3xl font-display font-bold text-foreground mb-8 text-center">How It Works</motion.h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* How It Works */}
+        <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }} variants={stagger}>
+          <motion.h2 variants={fadeUp} custom={0} className="text-lg font-display font-bold text-foreground mb-4">How It Works</motion.h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
               { step: "01", title: "Data Collection", description: "DWLR stations continuously record groundwater levels and transmit data in real-time." },
               { step: "02", title: "AI Processing", description: "LSTM neural networks analyze historical patterns to generate accurate predictions up to 90 days ahead." },
               { step: "03", title: "Actionable Insights", description: "Interactive dashboards, maps, and alerts help stakeholders monitor trends and respond to changes." },
             ].map((item, i) => (
-              <motion.div key={item.step} variants={fadeUp} custom={i + 1} className="relative p-6 rounded-xl bg-card border border-border">
-                <span className="text-5xl font-display font-bold text-primary/15">{item.step}</span>
-                <h3 className="font-display font-semibold text-foreground text-lg mt-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground mt-2">{item.description}</p>
+              <motion.div key={item.step} variants={fadeUp} custom={i + 1} className="relative p-4 rounded-xl bg-card border border-border">
+                <span className="text-3xl font-display font-bold text-primary/15">{item.step}</span>
+                <h3 className="font-display font-semibold text-foreground text-sm mt-1">{item.title}</h3>
+                <p className="text-xs text-muted-foreground mt-1">{item.description}</p>
               </motion.div>
             ))}
           </div>
-        </div>
-      </motion.section>
+        </motion.section>
 
-      {/* Quick Links - Full page */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-40px" }}
-        variants={stagger}
-        className="min-h-screen flex flex-col items-center justify-center px-4 py-16 bg-background"
-      >
-        <div className="max-w-6xl w-full">
-          <motion.h2 variants={fadeUp} custom={0} className="text-2xl lg:text-3xl font-display font-bold text-foreground mb-8 text-center">Quick Access</motion.h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Quick Links */}
+        <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }} variants={stagger}>
+          <motion.h2 variants={fadeUp} custom={0} className="text-lg font-display font-bold text-foreground mb-4">Quick Access</motion.h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {quickLinks.map((link, i) => (
               <motion.div key={link.path} variants={fadeUp} custom={i + 1}>
                 <Link
                   to={link.path}
-                  className="group flex items-center gap-4 p-5 rounded-xl bg-card border border-border hover:border-primary/40 hover:shadow-md transition-all"
+                  className="group flex items-center gap-3 p-3.5 rounded-xl bg-card border border-border hover:border-primary/40 hover:shadow-md transition-all"
                 >
-                  <div className="p-2.5 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors">
-                    <link.icon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                  <div className="p-2 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors">
+                    <link.icon className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                   </div>
                   <div className="min-w-0">
-                    <p className="font-semibold text-foreground">{link.label}</p>
-                    <p className="text-xs text-muted-foreground">{link.description}</p>
+                    <p className="font-semibold text-foreground text-sm">{link.label}</p>
+                    <p className="text-[11px] text-muted-foreground">{link.description}</p>
                   </div>
-                  <ArrowRight className="h-4 w-4 text-muted-foreground/40 ml-auto shrink-0 group-hover:text-primary transition-colors hidden sm:block" />
+                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/40 ml-auto shrink-0 group-hover:text-primary transition-colors hidden sm:block" />
                 </Link>
               </motion.div>
             ))}
           </div>
-        </div>
-      </motion.section>
+        </motion.section>
+      </div>
     </div>
   );
 }
