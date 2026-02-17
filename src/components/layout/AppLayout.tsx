@@ -91,15 +91,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Main content */}
       <div className="flex-1 lg:ml-64">
-        <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border px-4 lg:px-6 py-3 flex items-center gap-4">
-          <button
-            onClick={() => setMobileOpen(true)}
-            className="lg:hidden p-2 rounded-lg hover:bg-muted"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-          <div className="flex-1" />
-        </header>
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="lg:hidden fixed top-3 left-3 z-30 p-2 rounded-lg hover:bg-muted bg-background/80 backdrop-blur-lg border border-border"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
 
         <main className="p-4 lg:p-6">
           {children}
