@@ -88,7 +88,7 @@ export default function Home() {
         initial="hidden"
         animate="visible"
         variants={stagger}
-        className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-accent/5 to-background px-5 py-12 lg:px-8 flex flex-col items-center justify-center text-center"
+        className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-accent/5 to-background px-5 py-20 lg:px-8 flex flex-col items-center justify-center text-center"
         style={{ minHeight: "calc(100vh - 57px)" }}
       >
           <div className="absolute top-0 right-0 w-60 h-60 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
