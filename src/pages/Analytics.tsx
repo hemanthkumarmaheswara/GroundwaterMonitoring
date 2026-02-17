@@ -8,16 +8,25 @@ import { getStateStats } from "@/lib/mockData";
 import { useStations } from "@/hooks/useStations";
 
 const STATUS_COLORS = {
-  Normal: "hsl(152, 69%, 41%)",
-  Warning: "hsl(38, 92%, 50%)",
-  Critical: "hsl(0, 84%, 60%)",
+  Normal: "hsl(160, 64%, 43%)",
+  Warning: "hsl(32, 95%, 52%)",
+  Critical: "hsl(354, 70%, 54%)",
 };
 
 const TREND_COLORS = {
-  Rising: "hsl(152, 69%, 41%)",
-  Stable: "hsl(199, 89%, 48%)",
-  Falling: "hsl(0, 84%, 60%)",
+  Rising: "hsl(145, 63%, 42%)",
+  Stable: "hsl(215, 70%, 58%)",
+  Falling: "hsl(4, 80%, 58%)",
 };
+
+const CHART_TEAL = "hsl(174, 62%, 47%)";
+const CHART_INDIGO = "hsl(243, 55%, 58%)";
+const CHART_AMBER = "hsl(35, 92%, 52%)";
+const CHART_VIOLET = "hsl(270, 50%, 55%)";
+const CHART_ROSE = "hsl(340, 65%, 55%)";
+const CHART_CYAN = "hsl(190, 72%, 50%)";
+
+const AGENCY_COLORS = [CHART_TEAL, CHART_INDIGO, CHART_AMBER, CHART_VIOLET, CHART_ROSE, CHART_CYAN];
 
 export default function Analytics() {
   const { data: stations = [], isLoading } = useStations();
@@ -192,11 +201,17 @@ export default function Analytics() {
           <div className="h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={depthDistribution}>
+                <defs>
+                  <linearGradient id="depthGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={CHART_INDIGO} stopOpacity={0.35} />
+                    <stop offset="100%" stopColor={CHART_INDIGO} stopOpacity={0.05} />
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(214, 32%, 91%)" />
                 <XAxis dataKey="range" tick={{ fontSize: 11, fill: 'hsl(215, 16%, 47%)' }} tickLine={false} axisLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: 'hsl(215, 16%, 47%)' }} tickLine={false} axisLine={false} />
                 <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid hsl(214, 32%, 91%)' }} />
-                <Area type="monotone" dataKey="count" fill="hsl(199, 89%, 48%)" fillOpacity={0.2} stroke="hsl(199, 89%, 48%)" strokeWidth={2} name="Stations" />
+                <Area type="monotone" dataKey="count" fill="url(#depthGradient)" stroke={CHART_INDIGO} strokeWidth={2.5} name="Stations" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -233,8 +248,8 @@ export default function Analytics() {
                 <PolarGrid stroke="hsl(214, 32%, 91%)" />
                 <PolarAngleAxis dataKey="state" tick={{ fontSize: 11, fill: 'hsl(215, 16%, 47%)' }} />
                 <PolarRadiusAxis tick={{ fontSize: 10, fill: 'hsl(215, 16%, 47%)' }} domain={[0, 100]} />
-                <Radar name="Health %" dataKey="health" stroke="hsl(152, 69%, 41%)" fill="hsl(152, 69%, 41%)" fillOpacity={0.2} />
-                <Radar name="Risk %" dataKey="risk" stroke="hsl(0, 84%, 60%)" fill="hsl(0, 84%, 60%)" fillOpacity={0.15} />
+                <Radar name="Health %" dataKey="health" stroke={CHART_TEAL} fill={CHART_TEAL} fillOpacity={0.25} strokeWidth={2} />
+                <Radar name="Risk %" dataKey="risk" stroke={CHART_ROSE} fill={CHART_ROSE} fillOpacity={0.18} strokeWidth={2} />
                 <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid hsl(214, 32%, 91%)' }} />
                 <Legend iconSize={10} wrapperStyle={{ fontSize: 11 }} />
               </RadarChart>
@@ -252,7 +267,11 @@ export default function Analytics() {
                 <XAxis type="number" tick={{ fontSize: 11, fill: 'hsl(215, 16%, 47%)' }} tickLine={false} axisLine={false} />
                 <YAxis type="category" dataKey="name" tick={{ fontSize: 10, fill: 'hsl(215, 16%, 47%)' }} tickLine={false} axisLine={false} width={120} />
                 <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid hsl(214, 32%, 91%)' }} />
-                <Bar dataKey="value" fill="hsl(168, 76%, 42%)" radius={[0, 6, 6, 0]} name="Stations" />
+                <Bar dataKey="value" radius={[0, 6, 6, 0]} name="Stations">
+                  {agencyData.map((_, i) => (
+                    <Cell key={i} fill={AGENCY_COLORS[i % AGENCY_COLORS.length]} />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -265,12 +284,18 @@ export default function Analytics() {
         <div className="h-[350px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={stateStats}>
+              <defs>
+                <linearGradient id="avgLevelGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={CHART_CYAN} stopOpacity={0.9} />
+                  <stop offset="100%" stopColor={CHART_TEAL} stopOpacity={0.7} />
+                </linearGradient>
+              </defs>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(214, 32%, 91%)" />
               <XAxis dataKey="state" tick={{ fontSize: 11, fill: 'hsl(215, 16%, 47%)' }} tickLine={false} axisLine={false} angle={-20} textAnchor="end" height={60} />
               <YAxis tick={{ fontSize: 11, fill: 'hsl(215, 16%, 47%)' }} tickLine={false} axisLine={false} label={{ value: 'Avg Level (mbgl)', angle: -90, position: 'insideLeft', fill: 'hsl(215, 16%, 47%)', fontSize: 12 }} />
               <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid hsl(214, 32%, 91%)' }} />
               <Legend />
-              <Bar dataKey="avgLevel" fill="hsl(199, 89%, 48%)" radius={[6, 6, 0, 0]} name="Avg. Level (mbgl)" />
+              <Bar dataKey="avgLevel" fill="url(#avgLevelGradient)" radius={[6, 6, 0, 0]} name="Avg. Level (mbgl)" />
             </BarChart>
           </ResponsiveContainer>
         </div>
