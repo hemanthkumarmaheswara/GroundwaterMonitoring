@@ -88,8 +88,8 @@ export default function Home() {
         initial="hidden"
         animate="visible"
         variants={stagger}
-        className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-accent/5 to-background px-5 py-20 lg:px-8 flex flex-col items-center justify-center text-center"
-        style={{ minHeight: "calc(100vh - 57px)" }}
+        className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-accent/5 to-background px-5 py-14 lg:py-16 lg:px-8 flex flex-col items-center justify-center text-center"
+        style={{ minHeight: "min(520px, calc(100vh - 57px))" }}
       >
           <div className="absolute top-0 right-0 w-60 h-60 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
           <div className="absolute bottom-0 left-0 w-44 h-44 bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
@@ -97,10 +97,10 @@ export default function Home() {
             <motion.h1 variants={fadeUp} custom={0} className="text-3xl lg:text-5xl font-display font-bold text-foreground leading-tight">
               Groundwater Intelligence for India
             </motion.h1>
-            <motion.p variants={fadeUp} custom={1} className="text-muted-foreground mt-3 text-base lg:text-lg max-w-xl mx-auto">
+            <motion.p variants={fadeUp} custom={1} className="text-muted-foreground mt-2 text-base lg:text-lg max-w-xl mx-auto">
               Monitor, predict, and analyze groundwater levels across India's Digital Water Level Recorder network in real-time.
             </motion.p>
-            <motion.div variants={fadeUp} custom={2} className="flex flex-wrap gap-3 mt-5 justify-center">
+            <motion.div variants={fadeUp} custom={2} className="flex flex-wrap gap-3 mt-4 justify-center">
               <Button asChild size="lg" className="gap-2">
                 <Link to="/dashboard">
                   Open Dashboard <ArrowRight className="h-4 w-4" />
@@ -115,7 +115,7 @@ export default function Home() {
           </div>
 
           {/* Live stats */}
-          <motion.div variants={fadeUp} custom={3} className="relative z-10 grid grid-cols-3 gap-3 mt-8 max-w-sm mx-auto">
+          <motion.div variants={fadeUp} custom={3} className="relative z-10 grid grid-cols-3 gap-3 mt-6 max-w-md mx-auto">
             <div className="text-center p-2.5 rounded-xl bg-card/80 border border-border">
               <p className="text-xl lg:text-2xl font-display font-bold text-foreground">{totalStations.toLocaleString()}</p>
               <p className="text-[11px] text-muted-foreground mt-0.5">Active Stations</p>
@@ -132,7 +132,7 @@ export default function Home() {
         </motion.section>
 
       {/* Content */}
-      <div className="max-w-6xl mx-auto px-4 py-3 space-y-4">
+      <div className="max-w-6xl mx-auto px-6 lg:px-8 py-6 space-y-6">
         {/* Features */}
         <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }} variants={stagger}>
           <motion.h2 variants={fadeUp} custom={0} className="text-lg font-display font-bold text-foreground mb-4">Platform Capabilities</motion.h2>
