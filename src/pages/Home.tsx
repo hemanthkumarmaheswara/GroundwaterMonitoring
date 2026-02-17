@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Droplets, MapPin, Activity, BarChart3, ArrowRight, Waves, Shield, Zap, Database, Brain, Globe, Users } from "lucide-react";
+import { Droplets, MapPin, Activity, BarChart3, ArrowRight, Waves, Shield, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useStations } from "@/hooks/useStations";
 import { motion } from "framer-motion";
@@ -124,62 +124,6 @@ export default function Home() {
               </div>
               <h3 className="font-display font-semibold text-foreground mt-3">{f.title}</h3>
               <p className="text-sm text-muted-foreground mt-1.5">{f.description}</p>
-            </motion.div>
-          ))}
-        </div>
-      </motion.section>
-
-      {/* About the Project */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-50px" }}
-        variants={stagger}
-        className="rounded-2xl bg-card border border-border p-6 lg:p-8"
-      >
-        <motion.h2 variants={fadeUp} custom={0} className="text-xl font-display font-bold text-foreground mb-2">About the Project</motion.h2>
-        <motion.p variants={fadeUp} custom={1} className="text-sm text-muted-foreground mb-6 max-w-2xl">
-          AquaWatch India leverages AI and real-time sensor data to provide actionable insights into India's groundwater resources, supporting sustainable water management decisions.
-        </motion.p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[
-            { icon: Database, title: "DWLR Network", desc: "Connected to India's nationwide Digital Water Level Recorder network spanning 23,900+ stations across all states and union territories." },
-            { icon: Brain, title: "LSTM Deep Learning", desc: "Uses Long Short-Term Memory neural networks trained on historical groundwater data to predict future water levels up to 90 days ahead." },
-            { icon: Globe, title: "Nationwide Coverage", desc: "Monitors groundwater across every Indian state — from Rajasthan's arid zones to Kerala's coastal aquifers — for comprehensive analysis." },
-            { icon: Waves, title: "Real-Time Monitoring", desc: "Continuous data ingestion from DWLR sensors with automated anomaly detection and trend analysis for proactive water management." },
-            { icon: Shield, title: "Early Warning System", desc: "Automated alerts when water levels drop below critical thresholds, enabling timely intervention by authorities and communities." },
-            { icon: Users, title: "Open & Accessible", desc: "Designed for researchers, policymakers, and citizens to explore groundwater data through intuitive dashboards and interactive maps." },
-          ].map((item, i) => (
-            <motion.div key={item.title} variants={fadeUp} custom={i + 2} className="p-4 rounded-xl bg-muted/50 border border-border">
-              <div className="p-2 rounded-lg bg-primary/10 w-fit mb-3">
-                <item.icon className="h-5 w-5 text-primary" />
-              </div>
-              <h3 className="font-display font-semibold text-foreground text-sm">{item.title}</h3>
-              <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">{item.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </motion.section>
-
-      {/* How It Works */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-50px" }}
-        variants={stagger}
-      >
-        <motion.h2 variants={fadeUp} custom={0} className="text-xl font-display font-bold text-foreground mb-5">How It Works</motion.h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { step: "01", title: "Data Collection", desc: "DWLR sensors across India continuously measure groundwater levels and transmit data in real-time." },
-            { step: "02", title: "AI Processing", desc: "LSTM models analyze historical patterns and current readings to generate accurate water level predictions." },
-            { step: "03", title: "Visualization", desc: "Interactive maps, charts, and dashboards present data in an intuitive, accessible format." },
-            { step: "04", title: "Actionable Alerts", desc: "Automated warnings notify stakeholders when water levels reach critical or declining thresholds." },
-          ].map((item, i) => (
-            <motion.div key={item.step} variants={fadeUp} custom={i + 1} className="relative p-5 rounded-xl bg-card border border-border">
-              <span className="text-3xl font-display font-bold text-primary/15">{item.step}</span>
-              <h3 className="font-display font-semibold text-foreground mt-1">{item.title}</h3>
-              <p className="text-sm text-muted-foreground mt-1.5">{item.desc}</p>
             </motion.div>
           ))}
         </div>
