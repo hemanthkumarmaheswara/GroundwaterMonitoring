@@ -54,7 +54,7 @@ export default function Home() {
   const normalCount = stations.filter(s => s.status === "Normal").length;
 
   return (
-    <div className="space-y-6 p-3 lg:p-5 max-w-7xl mx-auto">
+    <div className="space-y-6 px-3 pt-1 pb-3 lg:px-5 lg:pt-1 lg:pb-5 max-w-7xl mx-auto">
       {/* Hero */}
       <motion.section
         initial="hidden"
