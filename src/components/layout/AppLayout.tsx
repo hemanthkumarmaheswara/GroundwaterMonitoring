@@ -31,7 +31,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         "fixed inset-y-0 left-0 z-50 w-64 bg-sidebar text-sidebar-foreground flex flex-col transition-transform duration-300 lg:translate-x-0",
         mobileOpen ? "translate-x-0" : "-translate-x-full"
       )}>
-        <div className="flex items-center gap-3 px-6 py-5 border-b border-sidebar-border">
+        <Link to="/dashboard" className="flex items-center gap-3 px-6 py-5 border-b border-sidebar-border hover:bg-sidebar-accent/50 transition-colors">
           <div className="p-2 rounded-lg bg-primary/20">
             <Droplets className="h-6 w-6 text-primary" />
           </div>
@@ -39,7 +39,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <h1 className="font-display text-lg font-bold text-sidebar-foreground">AquaWatch</h1>
             <p className="text-xs text-sidebar-foreground/50">India DWLR Network</p>
           </div>
-        </div>
+        </Link>
 
         <nav className="flex-1 px-3 py-4 space-y-1">
           {navItems.map(item => {
