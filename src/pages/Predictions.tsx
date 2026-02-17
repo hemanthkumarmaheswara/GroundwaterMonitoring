@@ -1,11 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useStations } from "@/hooks/useStations";
 import { Station } from "@/lib/mockData";
 import { getStationPrediction, PredictionPoint } from "@/services/predictionService";
 import PredictionChart from "@/components/dashboard/PredictionChart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Brain, Clock, Target, TrendingUp } from "lucide-react";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { Brain, Clock, Target, TrendingUp, ChevronsUpDown, Check } from "lucide-react";
 import StatCard from "@/components/dashboard/StatCard";
+import { cn } from "@/lib/utils";
 
 export default function Predictions() {
   const { data: stations = [], isLoading: stationsLoading } = useStations();
@@ -13,6 +17,8 @@ export default function Predictions() {
   const [data, setData] = useState<PredictionPoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [forecastDays, setForecastDays] = useState("30");
+  const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Set default station once loaded
   useEffect(() => {
@@ -29,6 +35,15 @@ export default function Predictions() {
       setLoading(false);
     });
   }, [selectedStation, forecastDays]);
+
+  // Only show first 100 matching stations in the dropdown for performance
+  const filteredStations = useMemo(() => {
+    if (!searchQuery) return stations.slice(0, 100);
+    const q = searchQuery.toLowerCase();
+    return stations
+      .filter(s => s.name.toLowerCase().includes(q) || s.state.toLowerCase().includes(q) || s.id.toLowerCase().includes(q))
+      .slice(0, 100);
+  }, [stations, searchQuery]);
 
   const predictedPoints = data.filter(d => d.type === 'Predicted');
   const avgPredicted = predictedPoints.length ? (predictedPoints.reduce((s, p) => s + p.level, 0) / predictedPoints.length).toFixed(2) : "—";
@@ -60,17 +75,38 @@ export default function Predictions() {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3">
-        <Select value={selectedStation.id} onValueChange={id => {
-          const s = stations.find(s => s.id === id);
-          if (s) setSelectedStation(s);
-        }}>
-          <SelectTrigger className="w-full sm:w-[300px]"><SelectValue placeholder="Select station" /></SelectTrigger>
-          <SelectContent>
-            {stations.map(s => (
-              <SelectItem key={s.id} value={s.id}>{s.name} — {s.state}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button variant="outline" role="combobox" aria-expanded={open} className="w-full sm:w-[350px] justify-between font-normal">
+              {selectedStation.name} — {selectedStation.state}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[350px] p-0" align="start">
+            <Command shouldFilter={false}>
+              <CommandInput placeholder="Search station..." value={searchQuery} onValueChange={setSearchQuery} />
+              <CommandList>
+                <CommandEmpty>No station found.</CommandEmpty>
+                <CommandGroup>
+                  {filteredStations.map(s => (
+                    <CommandItem
+                      key={s.id}
+                      value={s.id}
+                      onSelect={() => {
+                        setSelectedStation(s);
+                        setOpen(false);
+                        setSearchQuery("");
+                      }}
+                    >
+                      <Check className={cn("mr-2 h-4 w-4", selectedStation.id === s.id ? "opacity-100" : "opacity-0")} />
+                      <span className="truncate">{s.name} — {s.state}</span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
         <Select value={forecastDays} onValueChange={setForecastDays}>
           <SelectTrigger className="w-full sm:w-[160px]"><SelectValue /></SelectTrigger>
           <SelectContent>
