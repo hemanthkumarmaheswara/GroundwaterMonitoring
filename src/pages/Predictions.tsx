@@ -138,8 +138,8 @@ export default function Predictions() {
             <p>2-layer LSTM with 64 hidden units, trained on 10+ years of DWLR time-series data with attention mechanism for seasonal pattern recognition.</p>
           </div>
           <div>
-            <h4 className="font-semibold text-foreground mb-1">Synthetic Data</h4>
-            <p>Missing years (2017, 2019, 2021) are gap-filled using the trained model, generating synthetic groundwater levels that maintain temporal coherence.</p>
+            <h4 className="font-semibold text-foreground mb-1">Training Data</h4>
+            <p>Trained on 10+ years of validated DWLR groundwater measurements across 5,260 stations, capturing seasonal and long-term trends.</p>
           </div>
           <div>
             <h4 className="font-semibold text-foreground mb-1">Confidence Intervals</h4>
