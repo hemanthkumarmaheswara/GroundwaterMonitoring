@@ -83,15 +83,14 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Content */}
-      <div className="max-w-6xl mx-auto px-4 py-4 space-y-5">
-        {/* Hero */}
-        <motion.section
-          initial="hidden"
-          animate="visible"
-          variants={stagger}
-          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-accent/5 to-background border border-border px-5 py-10 lg:px-8 lg:py-14 text-center"
-        >
+      {/* Hero - Full page */}
+      <motion.section
+        initial="hidden"
+        animate="visible"
+        variants={stagger}
+        className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-accent/5 to-background px-5 py-20 lg:px-8 flex flex-col items-center justify-center text-center"
+        style={{ minHeight: "calc(100vh - 57px)" }}
+      >
           <div className="absolute top-0 right-0 w-60 h-60 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
           <div className="absolute bottom-0 left-0 w-44 h-44 bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
           <div className="relative z-10 max-w-2xl mx-auto">
@@ -132,6 +131,8 @@ export default function Home() {
           </motion.div>
         </motion.section>
 
+      {/* Content */}
+      <div className="max-w-6xl mx-auto px-4 py-6 space-y-5">
         {/* Features */}
         <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }} variants={stagger}>
           <motion.h2 variants={fadeUp} custom={0} className="text-lg font-display font-bold text-foreground mb-4">Platform Capabilities</motion.h2>
