@@ -1,9 +1,13 @@
 import { useMemo } from "react";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
-import { getStateStats } from "@/lib/mockData";
+import { getStateStats, Station } from "@/lib/mockData";
 
-export default function StateDistribution() {
-  const data = useMemo(() => getStateStats().slice(0, 10), []);
+interface StateDistributionProps {
+  stations: Station[];
+}
+
+export default function StateDistribution({ stations }: StateDistributionProps) {
+  const data = useMemo(() => getStateStats(stations).slice(0, 10), [stations]);
 
   return (
     <div className="bg-card p-6 rounded-xl border border-border">
