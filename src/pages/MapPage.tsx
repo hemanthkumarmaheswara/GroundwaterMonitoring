@@ -51,7 +51,8 @@ export default function MapPage() {
   const [showResults, setShowResults] = useState(false);
 
   const filtered = useMemo(() => {
-    let result = stations;
+    // Filter to India's bounding box (lat: 6-37, lng: 68-98)
+    let result = stations.filter(s => s.lat >= 6 && s.lat <= 37 && s.lng >= 68 && s.lng <= 98);
     if (statusFilter !== "all") result = result.filter(s => s.status === statusFilter);
     return result;
   }, [stations, statusFilter]);
