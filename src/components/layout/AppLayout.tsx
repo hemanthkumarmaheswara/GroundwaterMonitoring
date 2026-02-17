@@ -99,19 +99,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <Menu className="h-5 w-5" />
           </button>
           <div className="flex-1" />
-          {user ? (
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <LogOut className="h-4 w-4" />
-              Sign Out
-            </button>
-          ) : (
-            <Link to="/auth" className="flex items-center gap-2 text-sm text-primary font-medium hover:underline">
-              Sign In
-            </Link>
-          )}
         </header>
 
         <main className="p-4 lg:p-6">
