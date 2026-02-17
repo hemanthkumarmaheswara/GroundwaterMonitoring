@@ -128,28 +128,6 @@ export default function Home() {
           ))}
         </div>
       </motion.section>
-
-      {/* About the Project */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-50px" }}
-        variants={stagger}
-        className="rounded-2xl bg-card border border-border p-6 lg:p-8"
-      >
-        <motion.h2 variants={fadeUp} custom={0} className="text-xl font-display font-bold text-foreground mb-2">About the Project</motion.h2>
-        <motion.p variants={fadeUp} custom={1} className="text-muted-foreground text-sm lg:text-base leading-relaxed max-w-3xl">
-          AquaWatch India is an intelligent groundwater monitoring platform built to track and predict water levels across India's vast network of Digital Water Level Recorders (DWLRs). Developed to address growing concerns about groundwater depletion, the platform provides real-time insights, AI-driven forecasts, and early warning systems to help policymakers, researchers, and communities make informed decisions about water resource management.
-        </motion.p>
-        <motion.div variants={fadeUp} custom={2} className="flex flex-wrap gap-2 mt-4">
-          {["React", "TypeScript", "LSTM Neural Networks", "Leaflet Maps", "Recharts", "Tailwind CSS"].map(tag => (
-            <span key={tag} className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20">
-              {tag}
-            </span>
-          ))}
-        </motion.div>
-      </motion.section>
-
       {/* How It Works */}
       <motion.section
         initial="hidden"
