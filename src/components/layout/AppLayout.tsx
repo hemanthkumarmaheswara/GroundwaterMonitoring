@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, MapPin, Map, Activity, BarChart3, Menu, X, Droplets } from "lucide-react";
+import { Home, LayoutDashboard, MapPin, Map, Activity, BarChart3, Menu, X, Droplets } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { label: "Dashboard", path: "/", icon: LayoutDashboard },
+  { label: "Home", path: "/", icon: Home },
+  { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
   { label: "Stations", path: "/stations", icon: MapPin },
   { label: "Map", path: "/map", icon: Map },
   { label: "Predictions", path: "/predictions", icon: Activity },
