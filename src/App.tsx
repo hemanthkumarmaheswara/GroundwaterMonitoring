@@ -7,6 +7,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import Index from "./pages/Index";
 import Stations from "./pages/Stations";
 import StationDetail from "./pages/StationDetail";
+import MapPage from "./pages/MapPage";
 import Predictions from "./pages/Predictions";
 import Analytics from "./pages/Analytics";
 import NotFound from "./pages/NotFound";
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/stations" element={<Stations />} />
             <Route path="/stations/:id" element={<StationDetail />} />
+            <Route path="/map" element={<MapPage />} />
             <Route path="/predictions" element={<Predictions />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="*" element={<NotFound />} />
