@@ -1,29 +1,48 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useStations } from "@/hooks/useStations";
 import StationTable from "@/components/dashboard/StationTable";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+
+const PAGE_SIZE = 50;
 
 export default function Stations() {
   const { data: stations = [], isLoading } = useStations();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [stateFilter, setStateFilter] = useState("all");
+  const [page, setPage] = useState(1);
 
-  const states = useMemo(() => [...new Set(stations.map(s => s.state))].sort(), [stations]);
+  const states = useMemo(() => {
+    const unique = new Set<string>();
+    stations.forEach(s => {
+      if (s.state && s.state.trim()) unique.add(s.state);
+    });
+    return [...unique].sort();
+  }, [stations]);
 
   const filtered = useMemo(() => {
     return stations.filter(s => {
-      const matchSearch = s.name.toLowerCase().includes(search.toLowerCase()) ||
-        s.id.toLowerCase().includes(search.toLowerCase()) ||
-        s.state.toLowerCase().includes(search.toLowerCase()) ||
-        s.district.toLowerCase().includes(search.toLowerCase());
+      const q = search.toLowerCase();
+      const matchSearch = !q || s.name.toLowerCase().includes(q) ||
+        s.id.toLowerCase().includes(q) ||
+        s.state.toLowerCase().includes(q) ||
+        s.district.toLowerCase().includes(q);
       const matchStatus = statusFilter === "all" || s.status === statusFilter;
       const matchState = stateFilter === "all" || s.state === stateFilter;
       return matchSearch && matchStatus && matchState;
     });
   }, [stations, search, statusFilter, stateFilter]);
+
+  // Reset page when filters change
+  useEffect(() => {
+    setPage(1);
+  }, [search, statusFilter, stateFilter]);
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   if (isLoading) {
     return (
@@ -68,8 +87,22 @@ export default function Stations() {
         </Select>
       </div>
 
-      <p className="text-sm text-muted-foreground">{filtered.length.toLocaleString()} stations found</p>
-      <StationTable stations={filtered} />
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">{filtered.length.toLocaleString()} stations found</p>
+        {totalPages > 1 && (
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <span className="text-sm text-muted-foreground">Page {page} of {totalPages}</span>
+            <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+      </div>
+
+      <StationTable stations={paginated} />
     </div>
   );
 }
