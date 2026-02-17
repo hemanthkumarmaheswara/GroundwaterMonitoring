@@ -42,7 +42,7 @@ export default function Home() {
   return (
     <div className="space-y-6 p-3 lg:p-5 max-w-7xl mx-auto">
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-accent/5 to-background border border-border p-8 lg:p-12 text-center">
+      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-accent/5 to-background border border-border p-5 lg:p-8 text-center">
         <div className="absolute top-0 right-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-56 h-56 bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
         <div className="relative z-10 max-w-2xl mx-auto">
