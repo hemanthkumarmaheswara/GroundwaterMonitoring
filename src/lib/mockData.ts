@@ -39,6 +39,7 @@ function seededRandom(seed: string) {
 }
 
 function toTitleCase(str: string): string {
+  if (!str) return '';
   return str.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
 }
 
@@ -56,33 +57,45 @@ function transformStation(raw: RawStation, index: number): Station {
 
   return {
     id,
-    name: toTitleCase(raw.Station_Name),
-    state: toTitleCase(raw.State_Name),
-    district: toTitleCase(raw.District_Name),
-    tahsil: toTitleCase(raw.Tahsil_Name),
-    lat: raw.Latitude,
-    lng: raw.Longitude,
+    name: toTitleCase(raw.Station_Name || ''),
+    state: toTitleCase(raw.State_Name || ''),
+    district: toTitleCase(raw.District_Name || ''),
+    tahsil: toTitleCase(raw.Tahsil_Name || ''),
+    lat: raw.Latitude || 0,
+    lng: raw.Longitude || 0,
     level,
     status,
     trend,
-    stationType: raw.Station_Type,
-    stationStatus: raw.Station_Status,
-    agencyName: raw.Agency_Name,
+    stationType: raw.Station_Type || 'GROUND',
+    stationStatus: raw.Station_Status || 'INSTALLED',
+    agencyName: raw.Agency_Name || '',
     lastUpdate: new Date().toISOString(),
   };
 }
 
-let cachedStations: Station[] | null = null;
-
 export async function fetchStations(): Promise<Station[]> {
-  if (cachedStations) return cachedStations;
+  console.log('[fetchStations] Starting fetch...');
   const res = await fetch('/data/stations.json');
+  if (!res.ok) {
+    throw new Error(`Failed to fetch stations: ${res.status}`);
+  }
   const json = await res.json();
-  cachedStations = (json.Table as RawStation[]).map(transformStation);
-  return cachedStations;
+  console.log('[fetchStations] JSON parsed, Table length:', json.Table?.length);
+  const rawStations = json.Table as RawStation[];
+  if (!rawStations || !Array.isArray(rawStations)) {
+    throw new Error('Invalid stations data format');
+  }
+  // Filter out entries with missing critical fields
+  const validStations = rawStations.filter(s => 
+    s.Station_Name && s.Station_Name.trim() && 
+    s.State_Name && s.State_Name.trim()
+  );
+  const stations = validStations.map(transformStation);
+  console.log('[fetchStations] Transformed stations:', stations.length);
+  return stations;
 }
 
-// Keep a synchronous fallback for backwards compatibility (empty until loaded)
+// Keep for backwards compat
 export const MOCK_STATIONS: Station[] = [];
 
 export function generateHistoricalData() {
