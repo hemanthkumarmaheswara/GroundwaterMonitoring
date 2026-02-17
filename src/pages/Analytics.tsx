@@ -162,12 +162,27 @@ export default function Analytics() {
           <div className="h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={statusData} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={4} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
-                  {statusData.map((entry) => (
-                    <Cell key={entry.name} fill={STATUS_COLORS[entry.name as keyof typeof STATUS_COLORS]} />
-                  ))}
+                <defs>
+                  <linearGradient id="gradNormal" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="hsl(160, 64%, 43%)" />
+                    <stop offset="100%" stopColor="hsl(145, 58%, 36%)" />
+                  </linearGradient>
+                  <linearGradient id="gradWarning" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="hsl(40, 95%, 55%)" />
+                    <stop offset="100%" stopColor="hsl(28, 90%, 48%)" />
+                  </linearGradient>
+                  <linearGradient id="gradCritical" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="hsl(354, 70%, 58%)" />
+                    <stop offset="100%" stopColor="hsl(340, 65%, 45%)" />
+                  </linearGradient>
+                </defs>
+                <Pie data={statusData} cx="50%" cy="50%" innerRadius={65} outerRadius={105} paddingAngle={5} dataKey="value" strokeWidth={2} stroke="hsl(0, 0%, 100%)" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
+                  {statusData.map((entry) => {
+                    const gradMap: Record<string, string> = { Normal: "url(#gradNormal)", Warning: "url(#gradWarning)", Critical: "url(#gradCritical)" };
+                    return <Cell key={entry.name} fill={gradMap[entry.name] || STATUS_COLORS[entry.name as keyof typeof STATUS_COLORS]} />;
+                  })}
                 </Pie>
-                <Tooltip />
+                <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid hsl(214, 32%, 91%)' }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -177,15 +192,30 @@ export default function Analytics() {
           <h3 className="text-lg font-display font-bold text-card-foreground mb-4">Water Level Trends</h3>
           <div className="h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={trendData}>
+              <BarChart data={trendData} barCategoryGap="25%">
+                <defs>
+                  <linearGradient id="gradRising" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(145, 63%, 48%)" />
+                    <stop offset="100%" stopColor="hsl(160, 55%, 35%)" />
+                  </linearGradient>
+                  <linearGradient id="gradStable" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(215, 70%, 62%)" />
+                    <stop offset="100%" stopColor="hsl(230, 60%, 48%)" />
+                  </linearGradient>
+                  <linearGradient id="gradFalling" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(4, 80%, 62%)" />
+                    <stop offset="100%" stopColor="hsl(354, 70%, 45%)" />
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(214, 32%, 91%)" />
                 <XAxis dataKey="name" tick={{ fontSize: 12, fill: 'hsl(215, 16%, 47%)' }} tickLine={false} axisLine={false} />
                 <YAxis tick={{ fontSize: 12, fill: 'hsl(215, 16%, 47%)' }} tickLine={false} axisLine={false} />
                 <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid hsl(214, 32%, 91%)' }} />
-                <Bar dataKey="value" radius={[6, 6, 0, 0]} name="Stations">
-                  {trendData.map((entry) => (
-                    <Cell key={entry.name} fill={TREND_COLORS[entry.name as keyof typeof TREND_COLORS] || "hsl(199, 89%, 48%)"} />
-                  ))}
+                <Bar dataKey="value" radius={[8, 8, 0, 0]} name="Stations">
+                  {trendData.map((entry) => {
+                    const gradMap: Record<string, string> = { Rising: "url(#gradRising)", Stable: "url(#gradStable)", Falling: "url(#gradFalling)" };
+                    return <Cell key={entry.name} fill={gradMap[entry.name] || TREND_COLORS[entry.name as keyof typeof TREND_COLORS]} />;
+                  })}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
