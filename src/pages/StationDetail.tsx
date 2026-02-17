@@ -1,30 +1,25 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useStations } from "@/hooks/useStations";
-import { getStationPrediction, getSyntheticData, PredictionPoint } from "@/services/predictionService";
+import { getStationPrediction, PredictionPoint } from "@/services/predictionService";
 import PredictionChart from "@/components/dashboard/PredictionChart";
 import StatCard from "@/components/dashboard/StatCard";
 import { ArrowLeft, Droplets, MapPin, Activity, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 
 export default function StationDetail() {
   const { id } = useParams<{ id: string }>();
   const { data: stations = [], isLoading: stationsLoading } = useStations();
   const station = stations.find(s => s.id === id);
   const [predictionData, setPredictionData] = useState<PredictionPoint[]>([]);
-  const [syntheticData, setSyntheticData] = useState<PredictionPoint[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!station) return;
     setLoading(true);
-    Promise.all([
-      getStationPrediction(station.id),
-      getSyntheticData(station.id),
-    ]).then(([pred, synth]) => {
+    getStationPrediction(station.id).then((pred) => {
       setPredictionData(pred);
-      setSyntheticData(synth);
       setLoading(false);
     });
   }, [station]);
@@ -68,36 +63,19 @@ export default function StationDetail() {
         <StatCard title="Last Update" value="Just now" icon={Clock} variant="success" />
       </div>
 
-      <Tabs defaultValue="forecast">
-        <TabsList>
-          <TabsTrigger value="forecast">LSTM Forecast</TabsTrigger>
-          <TabsTrigger value="synthetic">Synthetic Data</TabsTrigger>
-        </TabsList>
-        <TabsContent value="forecast" className="mt-4">
-          {loading ? (
-            <div className="bg-card rounded-xl border border-border h-[400px] flex items-center justify-center">
-              <div className="text-center">
-                <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-3" />
-                <p className="text-muted-foreground text-sm">Running LSTM prediction model...</p>
-              </div>
+      <div>
+        <h2 className="text-lg font-display font-bold text-foreground mb-4">LSTM Forecast</h2>
+        {loading ? (
+          <div className="bg-card rounded-xl border border-border h-[400px] flex items-center justify-center">
+            <div className="text-center">
+              <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-3" />
+              <p className="text-muted-foreground text-sm">Running LSTM prediction model...</p>
             </div>
-          ) : (
-            <PredictionChart data={predictionData} />
-          )}
-        </TabsContent>
-        <TabsContent value="synthetic" className="mt-4">
-          {loading ? (
-            <div className="bg-card rounded-xl border border-border h-[400px] flex items-center justify-center">
-              <div className="text-center">
-                <div className="animate-spin h-8 w-8 border-4 border-accent border-t-transparent rounded-full mx-auto mb-3" />
-                <p className="text-muted-foreground text-sm">Generating synthetic data...</p>
-              </div>
-            </div>
-          ) : (
-            <PredictionChart data={syntheticData} title="Synthetic Data Generation (2015–2024)" subtitle="Gap-filled groundwater levels for missing years using LSTM" />
-          )}
-        </TabsContent>
-      </Tabs>
+          </div>
+        ) : (
+          <PredictionChart data={predictionData} />
+        )}
+      </div>
     </div>
   );
 }
