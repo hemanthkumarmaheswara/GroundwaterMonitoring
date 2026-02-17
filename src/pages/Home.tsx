@@ -42,10 +42,11 @@ export default function Home() {
   return (
     <div className="space-y-10">
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-accent/5 to-background border border-border p-8 lg:p-12">
+      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-accent/5 to-background border border-border p-8 lg:p-12 text-center">
         <div className="absolute top-0 right-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-        <div className="relative z-10 max-w-2xl">
-          <div className="flex items-center gap-2 mb-4">
+        <div className="absolute bottom-0 left-0 w-56 h-56 bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+        <div className="relative z-10 max-w-2xl mx-auto">
+          <div className="flex items-center gap-2 mb-4 justify-center">
             <div className="p-2 rounded-lg bg-primary/20">
               <Droplets className="h-6 w-6 text-primary" />
             </div>
@@ -54,10 +55,10 @@ export default function Home() {
           <h1 className="text-3xl lg:text-5xl font-display font-bold text-foreground leading-tight">
             Groundwater Intelligence for India
           </h1>
-          <p className="text-muted-foreground mt-4 text-base lg:text-lg max-w-xl">
+          <p className="text-muted-foreground mt-4 text-base lg:text-lg max-w-xl mx-auto">
             Monitor, predict, and analyze groundwater levels across India's Digital Water Level Recorder network in real-time.
           </p>
-          <div className="flex flex-wrap gap-3 mt-6">
+          <div className="flex flex-wrap gap-3 mt-6 justify-center">
             <Button asChild size="lg" className="gap-2">
               <Link to="/dashboard">
                 Open Dashboard <ArrowRight className="h-4 w-4" />
@@ -72,7 +73,7 @@ export default function Home() {
         </div>
 
         {/* Live stats */}
-        <div className="relative z-10 grid grid-cols-3 gap-4 mt-10 max-w-lg">
+        <div className="relative z-10 grid grid-cols-3 gap-4 mt-10 max-w-md mx-auto">
           <div className="text-center p-3 rounded-xl bg-card/80 border border-border">
             <p className="text-2xl lg:text-3xl font-display font-bold text-foreground">{totalStations.toLocaleString()}</p>
             <p className="text-xs text-muted-foreground mt-1">Active Stations</p>
