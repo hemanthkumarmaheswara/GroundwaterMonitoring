@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from "recharts";
-import { MOCK_STATIONS, getStateStats } from "@/lib/mockData";
+import { getStateStats } from "@/lib/mockData";
+import { useStations } from "@/hooks/useStations";
 
 const STATUS_COLORS = {
   Normal: "hsl(152, 69%, 41%)",
@@ -9,19 +10,29 @@ const STATUS_COLORS = {
 };
 
 export default function Analytics() {
+  const { data: stations = [], isLoading } = useStations();
+
   const statusData = useMemo(() => {
     const counts = { Normal: 0, Warning: 0, Critical: 0 };
-    MOCK_STATIONS.forEach(s => counts[s.status]++);
+    stations.forEach(s => counts[s.status]++);
     return Object.entries(counts).map(([name, value]) => ({ name, value }));
-  }, []);
+  }, [stations]);
 
   const trendData = useMemo(() => {
     const counts = { rising: 0, falling: 0, stable: 0 };
-    MOCK_STATIONS.forEach(s => counts[s.trend]++);
+    stations.forEach(s => counts[s.trend]++);
     return Object.entries(counts).map(([name, value]) => ({ name: name.charAt(0).toUpperCase() + name.slice(1), value }));
-  }, []);
+  }, [stations]);
 
-  const stateStats = useMemo(() => getStateStats().slice(0, 8), []);
+  const stateStats = useMemo(() => getStateStats(stations).slice(0, 8), [stations]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-3" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -31,7 +42,6 @@ export default function Analytics() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Status Distribution */}
         <div className="bg-card p-6 rounded-xl border border-border">
           <h3 className="text-lg font-display font-bold text-card-foreground mb-4">Status Distribution</h3>
           <div className="h-[280px]">
@@ -48,7 +58,6 @@ export default function Analytics() {
           </div>
         </div>
 
-        {/* Trend Distribution */}
         <div className="bg-card p-6 rounded-xl border border-border">
           <h3 className="text-lg font-display font-bold text-card-foreground mb-4">Water Level Trends</h3>
           <div className="h-[280px]">
@@ -64,7 +73,6 @@ export default function Analytics() {
           </div>
         </div>
 
-        {/* State-wise Average Levels */}
         <div className="bg-card p-6 rounded-xl border border-border lg:col-span-2">
           <h3 className="text-lg font-display font-bold text-card-foreground mb-4">State-wise Average Water Level</h3>
           <div className="h-[350px]">

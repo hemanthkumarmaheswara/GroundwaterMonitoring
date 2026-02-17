@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { MOCK_STATIONS } from "@/lib/mockData";
+import { useStations } from "@/hooks/useStations";
 import { getStationPrediction, getSyntheticData, PredictionPoint } from "@/services/predictionService";
 import PredictionChart from "@/components/dashboard/PredictionChart";
 import StatCard from "@/components/dashboard/StatCard";
@@ -10,7 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function StationDetail() {
   const { id } = useParams<{ id: string }>();
-  const station = MOCK_STATIONS.find(s => s.id === id);
+  const { data: stations = [], isLoading: stationsLoading } = useStations();
+  const station = stations.find(s => s.id === id);
   const [predictionData, setPredictionData] = useState<PredictionPoint[]>([]);
   const [syntheticData, setSyntheticData] = useState<PredictionPoint[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,6 +28,14 @@ export default function StationDetail() {
       setLoading(false);
     });
   }, [station]);
+
+  if (stationsLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-3" />
+      </div>
+    );
+  }
 
   if (!station) {
     return (
@@ -85,11 +94,7 @@ export default function StationDetail() {
               </div>
             </div>
           ) : (
-            <PredictionChart
-              data={syntheticData}
-              title="Synthetic Data Generation (2015–2024)"
-              subtitle="Gap-filled groundwater levels for missing years using LSTM"
-            />
+            <PredictionChart data={syntheticData} title="Synthetic Data Generation (2015–2024)" subtitle="Gap-filled groundwater levels for missing years using LSTM" />
           )}
         </TabsContent>
       </Tabs>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { MOCK_STATIONS, Station } from "@/lib/mockData";
+import { useStations } from "@/hooks/useStations";
+import { Station } from "@/lib/mockData";
 import { getStationPrediction, PredictionPoint } from "@/services/predictionService";
 import PredictionChart from "@/components/dashboard/PredictionChart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -7,12 +8,21 @@ import { Brain, Clock, Target, TrendingUp } from "lucide-react";
 import StatCard from "@/components/dashboard/StatCard";
 
 export default function Predictions() {
-  const [selectedStation, setSelectedStation] = useState<Station>(MOCK_STATIONS[0]);
+  const { data: stations = [], isLoading: stationsLoading } = useStations();
+  const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const [data, setData] = useState<PredictionPoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [forecastDays, setForecastDays] = useState("30");
 
+  // Set default station once loaded
   useEffect(() => {
+    if (stations.length > 0 && !selectedStation) {
+      setSelectedStation(stations[0]);
+    }
+  }, [stations, selectedStation]);
+
+  useEffect(() => {
+    if (!selectedStation) return;
     setLoading(true);
     getStationPrediction(selectedStation.id, parseInt(forecastDays)).then(d => {
       setData(d);
@@ -23,6 +33,17 @@ export default function Predictions() {
   const predictedPoints = data.filter(d => d.type === 'Predicted');
   const avgPredicted = predictedPoints.length ? (predictedPoints.reduce((s, p) => s + p.level, 0) / predictedPoints.length).toFixed(2) : "—";
   const maxPredicted = predictedPoints.length ? Math.max(...predictedPoints.map(p => p.level)).toFixed(2) : "—";
+
+  if (stationsLoading || !selectedStation) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-3" />
+          <p className="text-muted-foreground text-sm">Loading stations...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -40,22 +61,18 @@ export default function Predictions() {
 
       <div className="flex flex-col sm:flex-row gap-3">
         <Select value={selectedStation.id} onValueChange={id => {
-          const s = MOCK_STATIONS.find(s => s.id === id);
+          const s = stations.find(s => s.id === id);
           if (s) setSelectedStation(s);
         }}>
-          <SelectTrigger className="w-full sm:w-[300px]">
-            <SelectValue placeholder="Select station" />
-          </SelectTrigger>
+          <SelectTrigger className="w-full sm:w-[300px]"><SelectValue placeholder="Select station" /></SelectTrigger>
           <SelectContent>
-            {MOCK_STATIONS.map(s => (
+            {stations.map(s => (
               <SelectItem key={s.id} value={s.id}>{s.name} — {s.state}</SelectItem>
             ))}
           </SelectContent>
         </Select>
         <Select value={forecastDays} onValueChange={setForecastDays}>
-          <SelectTrigger className="w-full sm:w-[160px]">
-            <SelectValue />
-          </SelectTrigger>
+          <SelectTrigger className="w-full sm:w-[160px]"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="7">7 Days</SelectItem>
             <SelectItem value="15">15 Days</SelectItem>
