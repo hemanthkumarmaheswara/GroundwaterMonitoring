@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Home, LayoutDashboard, MapPin, Map, Activity, BarChart3, Menu, X, Droplets } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Home, LayoutDashboard, MapPin, Map, Activity, BarChart3, Menu, X, Droplets, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
   { label: "Home", path: "/", icon: Home },
@@ -14,7 +15,14 @@ const navItems = [
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/auth");
+  };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -55,7 +63,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        <div className="px-4 py-4 border-t border-sidebar-border">
+        <div className="px-4 py-4 border-t border-sidebar-border space-y-3">
           <div className="bg-sidebar-accent rounded-lg p-3">
             <p className="text-xs font-semibold text-sidebar-foreground/80">LSTM Model v2.1</p>
             <p className="text-xs text-sidebar-foreground/50 mt-1">5,260 DWLR Stations</p>
@@ -64,6 +72,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </div>
             <p className="text-xs text-sidebar-foreground/50 mt-1">87% model accuracy</p>
           </div>
+          {user && (
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all"
+            >
+              <LogOut className="h-5 w-5" />
+              Sign Out
+            </button>
+          )}
         </div>
       </aside>
 
