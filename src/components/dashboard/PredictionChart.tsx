@@ -21,7 +21,7 @@ export default function PredictionChart({ data, title = "Groundwater Level Forec
       date: point.date,
       historicalLevel: point.type === 'Historical' ? point.level : null,
       predictedLevel: point.type === 'Predicted' || index === lastHistoryIndex ? point.level : null,
-      syntheticLevel: point.type === 'Synthetic' ? point.level : null,
+      syntheticLevel: null,
       confidenceHigh: point.type === 'Predicted' ? point.confidenceHigh : null,
       confidenceLow: point.type === 'Predicted' ? point.confidenceLow : null,
     }));
@@ -72,7 +72,7 @@ export default function PredictionChart({ data, title = "Groundwater Level Forec
             <Area type="monotone" dataKey="confidenceHigh" stroke="none" fill="url(#colorConfidence)" name="95% Confidence" connectNulls />
             <Line type="monotone" dataKey="historicalLevel" stroke="hsl(199, 89%, 48%)" strokeWidth={3} dot={{ r: 3, fill: 'hsl(199, 89%, 48%)', strokeWidth: 0 }} name="Historical" connectNulls />
             <Line type="monotone" dataKey="predictedLevel" stroke="hsl(38, 92%, 50%)" strokeWidth={3} strokeDasharray="4 4" dot={{ stroke: 'hsl(38, 92%, 50%)', strokeWidth: 2, r: 3, fill: 'white' }} name="LSTM Forecast" connectNulls />
-            <Line type="monotone" dataKey="syntheticLevel" stroke="hsl(168, 76%, 42%)" strokeWidth={2} strokeDasharray="6 3" dot={{ r: 2, fill: 'hsl(168, 76%, 42%)' }} name="Synthetic (Gap-filled)" connectNulls />
+            
             {splitPoint && <ReferenceDot x={splitPoint.date} y={splitPoint.level} r={6} fill="hsl(199, 89%, 48%)" stroke="white" strokeWidth={2} />}
           </ComposedChart>
         )}
