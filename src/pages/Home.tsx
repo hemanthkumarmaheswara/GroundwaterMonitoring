@@ -129,6 +129,50 @@ export default function Home() {
         </div>
       </motion.section>
 
+      {/* About the Project */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={stagger}
+        className="rounded-2xl bg-card border border-border p-6 lg:p-8"
+      >
+        <motion.h2 variants={fadeUp} custom={0} className="text-xl font-display font-bold text-foreground mb-2">About the Project</motion.h2>
+        <motion.p variants={fadeUp} custom={1} className="text-muted-foreground text-sm lg:text-base leading-relaxed max-w-3xl">
+          AquaWatch India is an intelligent groundwater monitoring platform built to track and predict water levels across India's vast network of Digital Water Level Recorders (DWLRs). Developed to address growing concerns about groundwater depletion, the platform provides real-time insights, AI-driven forecasts, and early warning systems to help policymakers, researchers, and communities make informed decisions about water resource management.
+        </motion.p>
+        <motion.div variants={fadeUp} custom={2} className="flex flex-wrap gap-2 mt-4">
+          {["React", "TypeScript", "LSTM Neural Networks", "Leaflet Maps", "Recharts", "Tailwind CSS"].map(tag => (
+            <span key={tag} className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20">
+              {tag}
+            </span>
+          ))}
+        </motion.div>
+      </motion.section>
+
+      {/* How It Works */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={stagger}
+      >
+        <motion.h2 variants={fadeUp} custom={0} className="text-xl font-display font-bold text-foreground mb-5">How It Works</motion.h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[
+            { step: "01", title: "Data Collection", description: "DWLR stations across India continuously record groundwater levels and transmit data in real-time." },
+            { step: "02", title: "AI Processing", description: "LSTM neural networks analyze historical patterns to generate accurate water level predictions up to 90 days ahead." },
+            { step: "03", title: "Actionable Insights", description: "Interactive dashboards, maps, and alerts help stakeholders monitor trends and respond to critical changes." },
+          ].map((item, i) => (
+            <motion.div key={item.step} variants={fadeUp} custom={i + 1} className="relative p-5 rounded-xl bg-card border border-border">
+              <span className="text-4xl font-display font-bold text-primary/15">{item.step}</span>
+              <h3 className="font-display font-semibold text-foreground mt-1">{item.title}</h3>
+              <p className="text-sm text-muted-foreground mt-1.5">{item.description}</p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
       {/* Quick Links */}
       <motion.section
         initial="hidden"
