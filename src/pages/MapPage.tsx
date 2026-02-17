@@ -1,9 +1,11 @@
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { useStations } from "@/hooks/useStations";
 import { Station } from "@/lib/mockData";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search, X, MapPin } from "lucide-react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
@@ -38,18 +40,39 @@ function createStationIcon(status: string) {
   });
 }
 
-export default function MapPage() { 
+export default function MapPage() {
   const { data: stations = [], isLoading } = useStations();
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const clusterGroupRef = useRef<any>(null);
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const [statusFilter, setStatusFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showResults, setShowResults] = useState(false);
 
   const filtered = useMemo(() => {
-    if (statusFilter === "all") return stations;
-    return stations.filter(s => s.status === statusFilter);
+    let result = stations;
+    if (statusFilter !== "all") result = result.filter(s => s.status === statusFilter);
+    return result;
   }, [stations, statusFilter]);
+
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const q = searchQuery.toLowerCase();
+    return stations
+      .filter(s => s.name.toLowerCase().includes(q) || s.district?.toLowerCase().includes(q) || s.state?.toLowerCase().includes(q))
+      .slice(0, 50);
+  }, [stations, searchQuery]);
+
+  const handleSelectSearchResult = useCallback((station: Station) => {
+    const map = mapRef.current;
+    if (map && station.lat && station.lng) {
+      map.setView([station.lat, station.lng], 14, { animate: true });
+      setSelectedStation(station);
+    }
+    setShowResults(false);
+    setSearchQuery("");
+  }, []);
 
   // Initialize map
   useEffect(() => {
@@ -63,9 +86,10 @@ export default function MapPage() {
       zoomControl: true,
     });
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
       maxZoom: 19,
+      subdomains: "abcd",
     }).addTo(map);
 
     mapRef.current = map;
@@ -167,6 +191,46 @@ export default function MapPage() {
       </div>
 
       <div className="relative rounded-xl overflow-hidden border border-border">
+        {/* Search overlay */}
+        <div className="absolute top-3 left-3 z-[1000] w-72">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search station, district, state..."
+              value={searchQuery}
+              onChange={(e) => { setSearchQuery(e.target.value); setShowResults(true); }}
+              onFocus={() => setShowResults(true)}
+              className="pl-9 pr-8 bg-card/95 backdrop-blur-sm border-border shadow-lg text-sm"
+            />
+            {searchQuery && (
+              <button onClick={() => { setSearchQuery(""); setShowResults(false); }} className="absolute right-2.5 top-1/2 -translate-y-1/2">
+                <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+              </button>
+            )}
+          </div>
+          {showResults && searchResults.length > 0 && (
+            <div className="mt-1 bg-card/95 backdrop-blur-sm border border-border rounded-lg shadow-xl max-h-64 overflow-y-auto">
+              {searchResults.map((s) => (
+                <button
+                  key={s.id}
+                  onClick={() => handleSelectSearchResult(s)}
+                  className="w-full flex items-start gap-2 px-3 py-2 text-left hover:bg-accent/50 transition-colors text-sm border-b border-border/50 last:border-0"
+                >
+                  <MapPin className="h-3.5 w-3.5 mt-0.5 shrink-0" style={{ color: statusColors[s.status] || "#3b82f6" }} />
+                  <div className="min-w-0">
+                    <p className="font-medium text-foreground truncate">{s.name}</p>
+                    <p className="text-xs text-muted-foreground truncate">{s.district}, {s.state}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+          {showResults && searchQuery.trim() && searchResults.length === 0 && (
+            <div className="mt-1 bg-card/95 backdrop-blur-sm border border-border rounded-lg shadow-xl p-3 text-sm text-muted-foreground text-center">
+              No stations found
+            </div>
+          )}
+        </div>
         <div ref={mapContainerRef} className="h-[calc(100vh-220px)] min-h-[500px] w-full z-0" />
 
         {/* Station info popup */}
