@@ -4,6 +4,7 @@ import { Home, LayoutDashboard, MapPin, Map, Activity, BarChart3, Menu, X, Dropl
 import { cn } from "@/lib/utils";
 
 const navItems = [
+  { label: "Home", path: "/", icon: Home },
   { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
   { label: "Stations", path: "/stations", icon: MapPin },
   { label: "Map", path: "/map", icon: Map },
