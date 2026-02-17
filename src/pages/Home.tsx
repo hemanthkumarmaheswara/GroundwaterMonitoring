@@ -191,6 +191,49 @@ export default function Home() {
           </div>
         </motion.section>
       </div>
+
+      {/* Footer */}
+      <footer className="border-t border-border bg-card mt-6">
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="p-1.5 rounded-lg bg-primary/20">
+                  <Droplets className="h-4 w-4 text-primary" />
+                </div>
+                <span className="font-display font-bold text-foreground text-sm">AquaWatch India</span>
+              </div>
+              <p className="text-xs text-muted-foreground">Real-time groundwater monitoring and AI-powered predictions for India's DWLR network.</p>
+            </div>
+            <div>
+              <h4 className="font-display font-semibold text-foreground text-sm mb-3">Platform</h4>
+              <ul className="space-y-2">
+                <li><Link to="/dashboard" className="text-xs text-muted-foreground hover:text-primary transition-colors">Dashboard</Link></li>
+                <li><Link to="/stations" className="text-xs text-muted-foreground hover:text-primary transition-colors">Stations</Link></li>
+                <li><Link to="/map" className="text-xs text-muted-foreground hover:text-primary transition-colors">Map</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-display font-semibold text-foreground text-sm mb-3">Insights</h4>
+              <ul className="space-y-2">
+                <li><Link to="/predictions" className="text-xs text-muted-foreground hover:text-primary transition-colors">Predictions</Link></li>
+                <li><Link to="/analytics" className="text-xs text-muted-foreground hover:text-primary transition-colors">Analytics</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-display font-semibold text-foreground text-sm mb-3">Resources</h4>
+              <ul className="space-y-2">
+                <li><a href="https://cgwb.gov.in" target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground hover:text-primary transition-colors">CGWB India</a></li>
+                <li><a href="https://indiawris.gov.in" target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground hover:text-primary transition-colors">India-WRIS</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-border mt-6 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p className="text-xs text-muted-foreground">&copy; {new Date().getFullYear()} AquaWatch India. All rights reserved.</p>
+            <p className="text-xs text-muted-foreground">Powered by LSTM Neural Networks</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
