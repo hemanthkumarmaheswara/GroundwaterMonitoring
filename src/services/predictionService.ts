@@ -6,6 +6,18 @@ export interface PredictionPoint {
   confidenceHigh?: number;
 }
 
+function stationBaseLevel(stationId: string): number {
+  let hash = 0;
+  for (let i = 0; i < stationId.length; i++) {
+    const char = stationId.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  const x = Math.sin(hash) * 10000;
+  const rand = x - Math.floor(x);
+  return parseFloat((5 + rand * 40).toFixed(2));
+}
+
 export async function getStationPrediction(stationId: string, days = 30): Promise<PredictionPoint[]> {
   await new Promise(resolve => setTimeout(resolve, 600));
 
@@ -13,12 +25,12 @@ export async function getStationPrediction(stationId: string, days = 30): Promis
   const predictions: PredictionPoint[] = [];
 
   const startDayIndex = 16;
+  const baseLevel = stationBaseLevel(stationId);
   for (let i = 1; i <= days; i++) {
     const date = new Date();
     date.setDate(date.getDate() + i);
     const dayIndex = startDayIndex + i;
 
-    const baseLevel = 15;
     const trendComponent = dayIndex * 0.02;
     const seasonalComponent = Math.sin((dayIndex / 365) * 2 * Math.PI) * 2;
     const noise = (Math.sin(dayIndex * 13.7) * 0.5 - 0.25) * 0.2;
