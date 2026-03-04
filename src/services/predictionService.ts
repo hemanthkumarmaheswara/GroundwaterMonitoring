@@ -79,7 +79,7 @@ export async function getSyntheticData(stationId: string): Promise<PredictionPoi
 function generateMockHistory(stationId: string, days: number): PredictionPoint[] {
   const data: PredictionPoint[] = [];
   const now = new Date();
-  const baseLevel = 15;
+  const baseLevel = stationBaseLevel(stationId);
 
   for (let i = days; i >= 0; i--) {
     const date = new Date(now);
