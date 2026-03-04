@@ -230,7 +230,7 @@ export default function Home() {
           </div>
           <div className="border-t border-border mt-6 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2">
             <p className="text-xs text-muted-foreground">&copy; {new Date().getFullYear()} GW Monitor India. All rights reserved.</p>
-            
+            <p className="text-xs text-muted-foreground">Powered by LSTM Neural Networks</p>
           </div>
         </div>
       </footer>
