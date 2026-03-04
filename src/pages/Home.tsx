@@ -64,7 +64,7 @@ export default function Home() {
             <div className="p-1.5 rounded-lg bg-primary/20">
               <Droplets className="h-5 w-5 text-primary" />
             </div>
-            <span className="font-display font-bold text-foreground">AquaWatch India</span>
+            <span className="font-display font-bold text-foreground">GW Monitor India</span>
           </Link>
           <div className="flex items-center gap-3">
             {user ? (
@@ -201,7 +201,7 @@ export default function Home() {
                 <div className="p-1.5 rounded-lg bg-primary/20">
                   <Droplets className="h-4 w-4 text-primary" />
                 </div>
-                <span className="font-display font-bold text-foreground text-sm">AquaWatch India</span>
+                <span className="font-display font-bold text-foreground text-sm">GW Monitor India</span>
               </div>
               <p className="text-xs text-muted-foreground">Real-time groundwater monitoring and AI-powered predictions for India's DWLR network.</p>
             </div>
@@ -229,7 +229,7 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-border mt-6 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <p className="text-xs text-muted-foreground">&copy; {new Date().getFullYear()} AquaWatch India. All rights reserved.</p>
+            <p className="text-xs text-muted-foreground">&copy; {new Date().getFullYear()} GW Monitor India. All rights reserved.</p>
             <p className="text-xs text-muted-foreground">Powered by LSTM Neural Networks</p>
           </div>
         </div>
