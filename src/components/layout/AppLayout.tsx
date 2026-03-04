@@ -36,7 +36,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <Droplets className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <h1 className="font-display text-lg font-bold text-sidebar-foreground">AquaWatch</h1>
+            <h1 className="font-display text-lg font-bold text-sidebar-foreground">GW Monitor</h1>
             <p className="text-xs text-sidebar-foreground/50">India DWLR Network</p>
           </div>
         </Link>
