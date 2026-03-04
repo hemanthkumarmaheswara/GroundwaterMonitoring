@@ -7,12 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Brain, Clock, Target, TrendingUp, ChevronsUpDown, Check, CalendarIcon, X } from "lucide-react";
+import { Brain, Clock, Target, TrendingUp, ChevronsUpDown, Check } from "lucide-react";
 import StatCard from "@/components/dashboard/StatCard";
 import { cn } from "@/lib/utils";
-import { format, startOfMonth, endOfMonth } from "date-fns";
-import { Badge } from "@/components/ui/badge";
 
 export default function Predictions() {
   const { data: stations = [], isLoading: stationsLoading } = useStations();
@@ -22,10 +19,6 @@ export default function Predictions() {
   const [forecastDays, setForecastDays] = useState("30");
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
-  // Month filter state
-  const [monthPickerOpen, setMonthPickerOpen] = useState(false);
-  const [selectedMonth, setSelectedMonth] = useState<Date | undefined>(undefined);
 
   // Set default station once loaded
   useEffect(() => {
@@ -52,18 +45,7 @@ export default function Predictions() {
       .slice(0, 100);
   }, [stations, searchQuery]);
 
-  // Filter data by selected month if set
-  const filteredData = useMemo(() => {
-    if (!selectedMonth) return data;
-    const start = startOfMonth(selectedMonth);
-    const end = endOfMonth(selectedMonth);
-    // Always include some historical context (last 7 days before month start)
-    const contextStart = new Date(start);
-    contextStart.setDate(contextStart.getDate() - 7);
-    return data.filter(d => d.dateObj >= contextStart && d.dateObj <= end);
-  }, [data, selectedMonth]);
-
-  const predictedPoints = filteredData.filter(d => d.type === 'Predicted');
+  const predictedPoints = data.filter(d => d.type === 'Predicted');
   const avgPredicted = predictedPoints.length ? (predictedPoints.reduce((s, p) => s + p.level, 0) / predictedPoints.length).toFixed(2) : "—";
   const maxPredicted = predictedPoints.length ? Math.max(...predictedPoints.map(p => p.level)).toFixed(2) : "—";
 
@@ -87,14 +69,12 @@ export default function Predictions() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Model Type" value="LSTM v2.1" icon={Brain} variant="primary" />
-        <StatCard title="Forecast Window" value={forecastDays === "all" ? "Full Year" : `${forecastDays} Days`} icon={Clock} variant="default" />
+        <StatCard title="Forecast Window" value={`${forecastDays} Days`} icon={Clock} variant="default" />
         <StatCard title="Avg. Predicted" value={`${avgPredicted} m`} icon={Target} variant="warning" />
         <StatCard title="Peak Level" value={`${maxPredicted} m`} icon={TrendingUp} variant="destructive" />
       </div>
 
-      {/* Filters row */}
-      <div className="flex flex-col sm:flex-row gap-3 flex-wrap">
-        {/* Station selector */}
+      <div className="flex flex-col sm:flex-row gap-3">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button variant="outline" role="combobox" aria-expanded={open} className="w-full sm:w-[350px] justify-between font-normal">
@@ -127,8 +107,6 @@ export default function Predictions() {
             </Command>
           </PopoverContent>
         </Popover>
-
-        {/* Forecast days */}
         <Select value={forecastDays} onValueChange={setForecastDays}>
           <SelectTrigger className="w-full sm:w-[160px]"><SelectValue /></SelectTrigger>
           <SelectContent>
@@ -139,49 +117,6 @@ export default function Predictions() {
             <SelectItem value="90">90 Days</SelectItem>
           </SelectContent>
         </Select>
-
-        {/* Month filter */}
-        <Popover open={monthPickerOpen} onOpenChange={setMonthPickerOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              className={cn(
-                "w-full sm:w-[200px] justify-start text-left font-normal",
-                !selectedMonth && "text-muted-foreground"
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {selectedMonth ? format(selectedMonth, "MMMM yyyy") : "Filter by month"}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={selectedMonth}
-              onSelect={(date) => {
-                setSelectedMonth(date);
-                setMonthPickerOpen(false);
-              }}
-              initialFocus
-              className={cn("p-3 pointer-events-auto")}
-              // Show only month/year navigation, restrict to future 12 months + past 3 months
-              fromDate={new Date(new Date().setMonth(new Date().getMonth() - 3))}
-              toDate={new Date(new Date().setFullYear(new Date().getFullYear() + 1))}
-            />
-          </PopoverContent>
-        </Popover>
-
-        {/* Clear month filter badge */}
-        {selectedMonth && (
-          <Badge
-            variant="secondary"
-            className="flex items-center gap-1.5 px-3 py-1.5 cursor-pointer hover:bg-muted self-center"
-            onClick={() => setSelectedMonth(undefined)}
-          >
-            {format(selectedMonth, "MMM yyyy")}
-            <X className="h-3 w-3" />
-          </Badge>
-        )}
       </div>
 
       {loading ? (
@@ -191,20 +126,8 @@ export default function Predictions() {
             <p className="text-muted-foreground text-sm">Running LSTM model for {selectedStation.name}...</p>
           </div>
         </div>
-      ) : filteredData.length === 0 ? (
-        <div className="bg-card rounded-xl border border-border h-[300px] flex items-center justify-center">
-          <div className="text-center">
-            <CalendarIcon className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
-            <p className="text-muted-foreground text-sm">No data available for {selectedMonth ? format(selectedMonth, "MMMM yyyy") : "this period"}.</p>
-            <Button variant="link" className="mt-2 text-primary" onClick={() => setSelectedMonth(undefined)}>Clear filter</Button>
-          </div>
-        </div>
       ) : (
-        <PredictionChart
-          data={filteredData}
-          title={`Forecast: ${selectedStation.name}${selectedMonth ? ` · ${format(selectedMonth, "MMMM yyyy")}` : ""}`}
-          subtitle={`${selectedStation.district}, ${selectedStation.state} · ${selectedMonth ? format(selectedMonth, "MMMM yyyy") + " view" : forecastDays + "-day LSTM prediction"}`}
-        />
+        <PredictionChart data={data} title={`Forecast: ${selectedStation.name}`} subtitle={`${selectedStation.district}, ${selectedStation.state} · ${forecastDays}-day LSTM prediction`} />
       )}
 
       <div className="bg-card rounded-xl border border-border p-6">
