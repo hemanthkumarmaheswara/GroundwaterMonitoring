@@ -58,7 +58,7 @@ export default function Auth() {
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             {isLogin
-              ? "Sign in to access AquaWatch India"
+              ? "Sign in to access GW Monitor India"
               : "Sign up to start monitoring groundwater levels"}
           </p>
         </div>
