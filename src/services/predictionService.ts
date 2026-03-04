@@ -1,5 +1,6 @@
 export interface PredictionPoint {
   date: string;
+  dateObj: Date;
   level: number;
   type: 'Historical' | 'Predicted' | 'Synthetic';
   confidenceLow?: number;
@@ -18,28 +19,33 @@ function stationBaseLevel(stationId: string): number {
   return parseFloat((5 + rand * 40).toFixed(2));
 }
 
+// Generate predictions for a wide window (365 days ahead + 90 days history)
 export async function getStationPrediction(stationId: string, days = 30): Promise<PredictionPoint[]> {
   await new Promise(resolve => setTimeout(resolve, 600));
 
-  const history = generateMockHistory(stationId, 15);
+  const history = generateMockHistory(stationId, 90);
   const predictions: PredictionPoint[] = [];
 
-  const startDayIndex = 16;
+  const startDayIndex = 91;
   const baseLevel = stationBaseLevel(stationId);
-  for (let i = 1; i <= days; i++) {
+
+  // Always generate a full year of predictions regardless of `days`
+  // so we can filter client-side by month
+  for (let i = 1; i <= 365; i++) {
     const date = new Date();
     date.setDate(date.getDate() + i);
     const dayIndex = startDayIndex + i;
 
-    const trendComponent = dayIndex * 0.02;
+    const trendComponent = dayIndex * 0.015;
     const seasonalComponent = Math.sin((dayIndex / 365) * 2 * Math.PI) * 2;
     const noise = (Math.sin(dayIndex * 13.7) * 0.5 - 0.25) * 0.2;
 
     const predictedLevel = baseLevel + trendComponent + seasonalComponent + noise;
-    const uncertainty = 0.3 + (i / days) * 1.2;
+    const uncertainty = 0.3 + (i / 365) * 2.0;
 
     predictions.push({
       date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      dateObj: new Date(date),
       level: parseFloat(predictedLevel.toFixed(2)),
       type: 'Predicted',
       confidenceLow: parseFloat((predictedLevel - uncertainty).toFixed(2)),
@@ -67,6 +73,7 @@ export async function getSyntheticData(stationId: string): Promise<PredictionPoi
 
       data.push({
         date: date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' }),
+        dateObj: new Date(date),
         level: parseFloat((baseLevel + yearOffset + seasonal + noise).toFixed(2)),
         type: isMissing ? 'Synthetic' : 'Historical',
       });
@@ -91,6 +98,7 @@ function generateMockHistory(stationId: string, days: number): PredictionPoint[]
 
     data.push({
       date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      dateObj: new Date(date),
       level: parseFloat((baseLevel + trendComponent + seasonalComponent + noise).toFixed(2)),
       type: 'Historical',
     });
