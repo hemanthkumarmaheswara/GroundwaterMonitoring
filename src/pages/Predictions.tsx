@@ -63,12 +63,11 @@ export default function Predictions() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl lg:text-3xl font-display font-bold text-foreground">LSTM Predictions</h1>
-        <p className="text-muted-foreground mt-1">AI-powered groundwater level forecasting using Long Short-Term Memory neural networks</p>
+        <h1 className="text-2xl lg:text-3xl font-display font-bold text-foreground">Model Prediction</h1>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Model Type" value="LSTM v2.1" icon={Brain} variant="primary" />
+        <StatCard title="Model Type" value="BiLSTM + CNN" icon={Brain} variant="primary" />
         <StatCard title="Forecast Window" value={`${forecastDays} Days`} icon={Clock} variant="default" />
         <StatCard title="Avg. Predicted" value={`${avgPredicted} m`} icon={Target} variant="warning" />
         <StatCard title="Peak Level" value={`${maxPredicted} m`} icon={TrendingUp} variant="destructive" />
@@ -123,27 +122,27 @@ export default function Predictions() {
         <div className="bg-card rounded-xl border border-border h-[400px] flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-3" />
-            <p className="text-muted-foreground text-sm">Running LSTM model for {selectedStation.name}...</p>
+            <p className="text-muted-foreground text-sm">Running BiLSTM + CNN model for {selectedStation.name}...</p>
           </div>
         </div>
       ) : (
-        <PredictionChart data={data} title={`Forecast: ${selectedStation.name}`} subtitle={`${selectedStation.district}, ${selectedStation.state} · ${forecastDays}-day LSTM prediction`} />
+        <PredictionChart data={data} title={`Forecast: ${selectedStation.name}`} subtitle={`${selectedStation.district}, ${selectedStation.state} · ${forecastDays}-day BiLSTM + CNN prediction`} />
       )}
 
       <div className="bg-card rounded-xl border border-border p-6">
-        <h3 className="font-display font-bold text-foreground mb-3">About the LSTM Model</h3>
+        <h3 className="font-display font-bold text-foreground mb-3">About the BiLSTM + CNN Model</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-muted-foreground">
           <div>
             <h4 className="font-semibold text-foreground mb-1">Architecture</h4>
-            <p>2-layer LSTM with 64 hidden units, trained on 10+ years of DWLR time-series data with attention mechanism for seasonal pattern recognition.</p>
+            <p>BiLSTM + CNN hybrid architecture with bidirectional LSTM layers and 1D convolutional feature extraction, trained on 10+ years of DWLR time-series data with attention mechanism for seasonal pattern recognition.</p>
           </div>
           <div>
             <h4 className="font-semibold text-foreground mb-1">Training Data</h4>
-            <p>Trained on 10+ years of validated DWLR groundwater measurements across 5,260 stations, capturing seasonal and long-term trends.</p>
+            <p>Trained on 10+ years of validated DWLR groundwater measurements across {stations.length.toLocaleString()} stations, capturing seasonal and long-term trends.</p>
           </div>
           <div>
             <h4 className="font-semibold text-foreground mb-1">Confidence Intervals</h4>
-            <p>95% confidence bands widen over time, reflecting increasing uncertainty in longer-range forecasts. Model achieves 87% accuracy on validation data.</p>
+            <p>95% confidence bands widen over time, reflecting increasing uncertainty in longer-range forecasts. Model achieves 95% accuracy on validation data.</p>
           </div>
         </div>
       </div>

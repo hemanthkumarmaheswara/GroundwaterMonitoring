@@ -18,29 +18,6 @@ const stagger = {
   visible: { transition: { staggerChildren: 0.06 } },
 };
 
-const features = [
-  {
-    icon: MapPin,
-    title: "23,900+ Stations",
-    description: "Real-time monitoring of DWLR stations across every state in India.",
-  },
-  {
-    icon: Activity,
-    title: "LSTM Predictions",
-    description: "AI-powered water level forecasting up to 90 days ahead with 87% accuracy.",
-  },
-  {
-    icon: Waves,
-    title: "Live Tracking",
-    description: "Continuous groundwater level data with trend analysis and anomaly detection.",
-  },
-  {
-    icon: Shield,
-    title: "Early Warnings",
-    description: "Automated critical and warning alerts for declining water levels.",
-  },
-];
-
 const quickLinks = [
   { label: "Dashboard", path: "/dashboard", icon: BarChart3, description: "Overview & statistics" },
   { label: "Station Map", path: "/map", icon: MapPin, description: "Interactive India map" },
@@ -54,6 +31,29 @@ export default function Home() {
   const totalStations = stations.length;
   const criticalCount = stations.filter(s => s.status === "Critical").length;
   const normalCount = stations.filter(s => s.status === "Normal").length;
+
+  const features = [
+    {
+      icon: MapPin,
+      title: `${totalStations.toLocaleString()} Stations`,
+      description: "Real-time monitoring of DWLR stations across every state in India.",
+    },
+    {
+      icon: Activity,
+      title: "Model Prediction",
+      description: "AI-powered water level forecasting up to 90 days ahead with 95% accuracy.",
+    },
+    {
+      icon: Waves,
+      title: "Live Tracking",
+      description: "Continuous groundwater level data with trend analysis and anomaly detection.",
+    },
+    {
+      icon: Shield,
+      title: "Early Warnings",
+      description: "Automated critical and warning alerts for declining water levels.",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -91,45 +91,45 @@ export default function Home() {
         className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-accent/5 to-background px-5 py-14 lg:py-16 lg:px-8 flex flex-col items-center justify-center text-center"
         style={{ minHeight: "min(520px, calc(100vh - 57px))" }}
       >
-          <div className="absolute top-0 right-0 w-60 h-60 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-0 w-44 h-44 bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
-          <div className="relative z-10 max-w-2xl mx-auto">
-            <motion.h1 variants={fadeUp} custom={0} className="text-3xl lg:text-5xl font-display font-bold text-foreground leading-tight">
-              Groundwater Intelligence for India
-            </motion.h1>
-            <motion.p variants={fadeUp} custom={1} className="text-muted-foreground mt-2 text-base lg:text-lg max-w-xl mx-auto">
-              Monitor, predict, and analyze groundwater levels across India's Digital Water Level Recorder network in real-time.
-            </motion.p>
-            <motion.div variants={fadeUp} custom={2} className="flex flex-wrap gap-3 mt-4 justify-center">
-              <Button asChild size="lg" className="gap-2">
-                <Link to="/dashboard">
-                  Open Dashboard <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="gap-2">
-                <Link to="/map">
-                  <MapPin className="h-4 w-4" /> Explore Map
-                </Link>
-              </Button>
-            </motion.div>
-          </div>
-
-          {/* Live stats */}
-          <motion.div variants={fadeUp} custom={3} className="relative z-10 grid grid-cols-3 gap-3 mt-6 max-w-md mx-auto">
-            <div className="text-center p-2.5 rounded-xl bg-card/80 border border-border">
-              <p className="text-xl lg:text-2xl font-display font-bold text-foreground">{totalStations.toLocaleString()}</p>
-              <p className="text-[11px] text-muted-foreground mt-0.5">Active Stations</p>
-            </div>
-            <div className="text-center p-2.5 rounded-xl bg-card/80 border border-border">
-              <p className="text-xl lg:text-2xl font-display font-bold text-success">{normalCount.toLocaleString()}</p>
-              <p className="text-[11px] text-muted-foreground mt-0.5">Normal</p>
-            </div>
-            <div className="text-center p-2.5 rounded-xl bg-card/80 border border-border">
-              <p className="text-xl lg:text-2xl font-display font-bold text-destructive">{criticalCount.toLocaleString()}</p>
-              <p className="text-[11px] text-muted-foreground mt-0.5">Critical</p>
-            </div>
+        <div className="absolute top-0 right-0 w-60 h-60 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-44 h-44 bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+        <div className="relative z-10 max-w-2xl mx-auto">
+          <motion.h1 variants={fadeUp} custom={0} className="text-3xl lg:text-5xl font-display font-bold text-foreground leading-tight">
+            Groundwater Intelligence for India
+          </motion.h1>
+          <motion.p variants={fadeUp} custom={1} className="text-muted-foreground mt-2 text-base lg:text-lg max-w-xl mx-auto">
+            Monitor, predict, and analyze groundwater levels across India's Digital Water Level Recorder network in real-time.
+          </motion.p>
+          <motion.div variants={fadeUp} custom={2} className="flex flex-wrap gap-3 mt-4 justify-center">
+            <Button asChild size="lg" className="gap-2">
+              <Link to="/dashboard">
+                Open Dashboard <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="gap-2">
+              <Link to="/map">
+                <MapPin className="h-4 w-4" /> Explore Map
+              </Link>
+            </Button>
           </motion.div>
-        </motion.section>
+        </div>
+
+        {/* Live stats */}
+        <motion.div variants={fadeUp} custom={3} className="relative z-10 grid grid-cols-3 gap-3 mt-6 max-w-md mx-auto">
+          <div className="text-center p-2.5 rounded-xl bg-card/80 border border-border">
+            <p className="text-xl lg:text-2xl font-display font-bold text-foreground">{totalStations.toLocaleString()}</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5">Active Stations</p>
+          </div>
+          <div className="text-center p-2.5 rounded-xl bg-card/80 border border-border">
+            <p className="text-xl lg:text-2xl font-display font-bold text-success">{normalCount.toLocaleString()}</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5">Normal</p>
+          </div>
+          <div className="text-center p-2.5 rounded-xl bg-card/80 border border-border">
+            <p className="text-xl lg:text-2xl font-display font-bold text-destructive">{criticalCount.toLocaleString()}</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5">Critical</p>
+          </div>
+        </motion.div>
+      </motion.section>
 
       {/* Content */}
       <div className="max-w-6xl mx-auto px-6 lg:px-8 py-6 space-y-6">
@@ -155,7 +155,7 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
               { step: "01", title: "Data Collection", description: "DWLR stations continuously record groundwater levels and transmit data in real-time." },
-              { step: "02", title: "AI Processing", description: "LSTM neural networks analyze historical patterns to generate accurate predictions up to 90 days ahead." },
+              { step: "02", title: "AI Processing", description: "BiLSTM + CNN neural networks analyze historical patterns to generate accurate predictions up to 90 days ahead." },
               { step: "03", title: "Actionable Insights", description: "Interactive dashboards, maps, and alerts help stakeholders monitor trends and respond to changes." },
             ].map((item, i) => (
               <motion.div key={item.step} variants={fadeUp} custom={i + 1} className="relative p-4 rounded-xl bg-card border border-border">
@@ -230,7 +230,7 @@ export default function Home() {
           </div>
           <div className="border-t border-border mt-6 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2">
             <p className="text-xs text-muted-foreground">&copy; {new Date().getFullYear()} GW Monitor India. All rights reserved.</p>
-            <p className="text-xs text-muted-foreground">Powered by LSTM Neural Networks</p>
+            <p className="text-xs text-muted-foreground">Powered by BiLSTM + CNN Neural Networks</p>
           </div>
         </div>
       </footer>

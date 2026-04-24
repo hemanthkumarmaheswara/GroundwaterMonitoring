@@ -8,7 +8,7 @@ interface PredictionChartProps {
   subtitle?: string;
 }
 
-export default function PredictionChart({ data, title = "Groundwater Level Forecast (30 Days)", subtitle = "Historical Data vs LSTM Model Prediction" }: PredictionChartProps) {
+export default function PredictionChart({ data, title = "Groundwater Level Forecast (30 Days)", subtitle = "Historical Data vs BiLSTM + CNN Model Prediction" }: PredictionChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
 
@@ -71,8 +71,8 @@ export default function PredictionChart({ data, title = "Groundwater Level Forec
             {splitPoint && <ReferenceLine x={splitPoint.date} stroke="hsl(215, 16%, 47%)" strokeDasharray="3 3" label={{ position: 'top', value: 'Today', fill: 'hsl(215, 16%, 47%)', fontSize: 12 }} />}
             <Area type="monotone" dataKey="confidenceHigh" stroke="none" fill="url(#colorConfidence)" name="95% Confidence" connectNulls />
             <Line type="monotone" dataKey="historicalLevel" stroke="hsl(199, 89%, 48%)" strokeWidth={3} dot={{ r: 3, fill: 'hsl(199, 89%, 48%)', strokeWidth: 0 }} name="Historical" connectNulls />
-            <Line type="monotone" dataKey="predictedLevel" stroke="hsl(38, 92%, 50%)" strokeWidth={3} strokeDasharray="4 4" dot={{ stroke: 'hsl(38, 92%, 50%)', strokeWidth: 2, r: 3, fill: 'white' }} name="LSTM Forecast" connectNulls />
-            
+            <Line type="monotone" dataKey="predictedLevel" stroke="hsl(38, 92%, 50%)" strokeWidth={3} strokeDasharray="4 4" dot={{ stroke: 'hsl(38, 92%, 50%)', strokeWidth: 2, r: 3, fill: 'white' }} name="BiLSTM + CNN Forecast" connectNulls />
+
             {splitPoint && <ReferenceDot x={splitPoint.date} y={splitPoint.level} r={6} fill="hsl(199, 89%, 48%)" stroke="white" strokeWidth={2} />}
           </ComposedChart>
         )}

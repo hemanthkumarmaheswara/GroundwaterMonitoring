@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#e0f2fe"/>
+  <!-- Large water drop -->
+  <path d="M28 14 C28 14, 16 30, 16 38 C16 44.627 21.373 50 28 50 C34.627 50 40 44.627 40 38 C40 30, 28 14, 28 14Z" fill="#38bdf8" opacity="0.9"/>
+  <!-- Small water drop -->
+  <path d="M42 26 C42 26, 36 34, 36 38 C36 41.314 38.686 44 42 44 C45.314 44 48 41.314 48 38 C48 34, 42 26, 42 26Z" fill="#0ea5e9"/>
+</svg>

@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Home, LayoutDashboard, MapPin, Map, Activity, BarChart3, Menu, X, Droplets, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
+import { useStations } from "@/hooks/useStations";
 
 const navItems = [
   { label: "Home", path: "/", icon: Home },
@@ -18,6 +19,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user, logout } = useAuth();
+  const { data: stations = [] } = useStations();
+  const totalCount = stations.length;
 
   const handleLogout = async () => {
     await logout();
@@ -65,12 +68,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
         <div className="px-4 py-4 border-t border-sidebar-border space-y-3">
           <div className="bg-sidebar-accent rounded-lg p-3">
-            <p className="text-xs font-semibold text-sidebar-foreground/80">LSTM Model v2.1</p>
-            <p className="text-xs text-sidebar-foreground/50 mt-1">5,260 DWLR Stations</p>
+            <p className="text-xs font-semibold text-sidebar-foreground/80">BiLSTM + CNN</p>
+            <p className="text-xs text-sidebar-foreground/50 mt-1">{totalCount.toLocaleString()} DWLR Stations</p>
             <div className="mt-2 h-1.5 rounded-full bg-sidebar-border overflow-hidden">
-              <div className="h-full w-[87%] rounded-full bg-primary" />
+              <div className="h-full w-[95%] rounded-full bg-primary" />
             </div>
-            <p className="text-xs text-sidebar-foreground/50 mt-1">87% model accuracy</p>
+            <p className="text-xs text-sidebar-foreground/50 mt-1">95% model accuracy</p>
           </div>
           {user && (
             <button

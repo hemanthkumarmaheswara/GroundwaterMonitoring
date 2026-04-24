@@ -85,13 +85,17 @@ export async function fetchStations(): Promise<Station[]> {
   if (!rawStations || !Array.isArray(rawStations)) {
     throw new Error('Invalid stations data format');
   }
-  // Filter out entries with missing critical fields
+  // Filter out entries with missing critical fields or invalid coordinates
   const validStations = rawStations.filter(s => 
     s.Station_Name && s.Station_Name.trim() && 
-    s.State_Name && s.State_Name.trim()
+    s.State_Name && s.State_Name.trim() &&
+    s.Latitude && s.Longitude &&
+    // India's bounding box (lat: 6-37, lng: 68-98)
+    s.Latitude >= 6 && s.Latitude <= 37 && 
+    s.Longitude >= 68 && s.Longitude <= 98
   );
   const stations = validStations.map(transformStation);
-  console.log('[fetchStations] Transformed stations:', stations.length);
+  console.log('[fetchStations] Validated stations in box:', stations.length);
   return stations;
 }
 

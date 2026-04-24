@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo, useCallback } from "react";
+import { useEffect, useRef, useState, useMemo, useCallback, useDeferredValue } from "react";
 import { useStations } from "@/hooks/useStations";
 import { Station } from "@/lib/mockData";
 import { Link } from "react-router-dom";
@@ -26,8 +26,14 @@ const statusColors: Record<string, string> = {
   Critical: "#ef4444",
 };
 
-function createStationIcon(status: string) {
-  const color = statusColors[status] || "#3b82f6";
+// Pre-create icons for performance
+const stationIcons: Record<string, L.DivIcon> = {
+  Normal: createIcon(statusColors.Normal),
+  Warning: createIcon(statusColors.Warning),
+  Critical: createIcon(statusColors.Critical),
+};
+
+function createIcon(color: string) {
   return L.divIcon({
     html: `<div style="
       width:12px;height:12px;border-radius:50%;
@@ -40,6 +46,10 @@ function createStationIcon(status: string) {
   });
 }
 
+function createStationIcon(status: string) {
+  return stationIcons[status] || stationIcons.Normal;
+}
+
 export default function MapPage() {
   const { data: stations = [], isLoading } = useStations();
   const mapRef = useRef<L.Map | null>(null);
@@ -50,20 +60,22 @@ export default function MapPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
 
+  const deferredQuery = useDeferredValue(searchQuery);
+
   const filtered = useMemo(() => {
-    // Filter to India's bounding box (lat: 6-37, lng: 68-98)
-    let result = stations.filter(s => s.lat >= 6 && s.lat <= 37 && s.lng >= 68 && s.lng <= 98);
+    // Data is now pre-filtered in mockData.ts for consistency
+    let result = stations;
     if (statusFilter !== "all") result = result.filter(s => s.status === statusFilter);
     return result;
   }, [stations, statusFilter]);
 
   const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) return [];
-    const q = searchQuery.toLowerCase();
+    if (!deferredQuery.trim()) return [];
+    const q = deferredQuery.toLowerCase();
     return stations
       .filter(s => s.name.toLowerCase().includes(q) || s.district?.toLowerCase().includes(q) || s.state?.toLowerCase().includes(q))
       .slice(0, 50);
-  }, [stations, searchQuery]);
+  }, [stations, deferredQuery]);
 
   const handleSelectSearchResult = useCallback((station: Station) => {
     const map = mapRef.current;
@@ -100,12 +112,22 @@ export default function MapPage() {
     };
   }, []);
 
-  // Update markers when stations/filter change
+  // Pre-create markers list to avoid recreation lag
+  const markers = useMemo(() => {
+    return filtered.map(station => {
+      const marker = L.marker([station.lat, station.lng], {
+        icon: createStationIcon(station.status),
+      });
+      marker.on("click", () => setSelectedStation(station));
+      return marker;
+    });
+  }, [filtered]);
+
+  // Update map layers when markers change
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || filtered.length === 0) return;
+    if (!map || markers.length === 0) return;
 
-    // Remove existing cluster group
     if (clusterGroupRef.current) {
       map.removeLayer(clusterGroupRef.current);
     }
@@ -116,7 +138,7 @@ export default function MapPage() {
       showCoverageOnHover: false,
       zoomToBoundsOnClick: true,
       chunkedLoading: true,
-      iconCreateFunction: (cluster) => {
+      iconCreateFunction: (cluster: any) => {
         const count = cluster.getChildCount();
         let size = "small";
         let dim = 30;
@@ -139,20 +161,10 @@ export default function MapPage() {
       },
     });
 
-    const markers: L.Marker[] = [];
-    filtered.forEach(station => {
-      if (!station.lat || !station.lng) return;
-      const marker = L.marker([station.lat, station.lng], {
-        icon: createStationIcon(station.status),
-      });
-      marker.on("click", () => setSelectedStation(station));
-      markers.push(marker);
-    });
-
     clusterGroup.addLayers(markers);
     map.addLayer(clusterGroup);
     clusterGroupRef.current = clusterGroup;
-  }, [filtered]);
+  }, [markers]);
 
   if (isLoading) {
     return (
